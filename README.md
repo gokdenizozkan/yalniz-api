@@ -6,6 +6,13 @@ YALNIZ API - Veterinary Practice Management API
 - [About](#about)
 - [API](#api)
 - [UML structure](#uml-structure)
+- [Request Body Templates](#request-body-templates)
+  - [Animal](#pet)
+  - [Owner](#owner)
+  - [Vet](#vet)
+  - [Vaccine](#vaccine)
+  - [Appointment](#appointment)
+  - [Workday](#workday)
 - [What's in the name?](#whats-in-the-name)
 
 ## About
@@ -15,29 +22,29 @@ It is a project for the bootcamp Patika+ given by [Patika](https://patika.dev).
 
 ## API
 
-### Animals
+### Pets
 
-| HTTP Method | HTTP Path                    | Action                 |
-|-------------|------------------------------|------------------------|
-| `GET`       | `/api/animals`               | get all animals        |
-| `GET`       | `/api/animals/{id}`          | get animal by id       |
-| `GET`       | `/api/animals/search`        | search animal by name  | 
-| `GET`       | `/api/animals/{id}/vaccines` | get vaccines of animal |
-| `POST`      | `/api/animals`               | add new animal         |
-| `PUT`       | `/api/animals/{id}`          | update animal          |
-| `DELETE`    | `/api/animals/{id}`          | delete animal          |
+| HTTP Method | HTTP Path                 | Action              |
+|-------------|---------------------------|---------------------|
+| `GET`       | `/api/pets`               | get all pets        |
+| `GET`       | `/api/pets/{id}`          | get pet by id       |
+| `GET`       | `/api/pets/search`        | search pet by name  | 
+| `GET`       | `/api/pets/{id}/vaccines` | get vaccines of pet |
+| `POST`      | `/api/pets`               | add new pet         |
+| `PUT`       | `/api/pets/{id}`          | update pet          |
+| `DELETE`    | `/api/pets/{id}`          | delete pet          |
 
-### Customers
+### Owners
 
-| HTTP Method | HTTP Path                     | Action                  |
-|-------------|-------------------------------|-------------------------|
-| `GET`       | `/api/customers`              | get all customers       |
-| `GET`       | `/api/customers/{id}`         | get customer by id      |
-| `GET`       | `/api/customers/search`       | search customer by name |
-| `GET`       | `/api/customers/{id}/animals` | get animals of customer |
-| `POST`      | `/api/customers`              | add new customer        |
-| `PUT`       | `/api/customers/{id}`         | update customer         |
-| `DELETE`    | `/api/customers/{id}`         | delete customer         |
+| HTTP Method | HTTP Path               | Action               |
+|-------------|-------------------------|----------------------|
+| `GET`       | `/api/owners`           | get all owners       |
+| `GET`       | `/api/owners/{id}`      | get owner by id      |
+| `GET`       | `/api/owners/search`    | search owner by name |
+| `GET`       | `/api/owners/{id}/pets` | get pets of owner    |
+| `POST`      | `/api/owners`           | add new owner        |
+| `PUT`       | `/api/owners/{id}`      | update owner         |
+| `DELETE`    | `/api/owners/{id}`      | delete owner         |
 
 ### Vets
 
@@ -53,23 +60,23 @@ It is a project for the bootcamp Patika+ given by [Patika](https://patika.dev).
 
 ### Vaccines
 
-| HTTP Method | HTTP Path                   | Action                                 |
-|-------------|-----------------------------|----------------------------------------|
-| `GET`       | `/api/vaccines/{animal-id}` | get all vaccines applied to the animal |
-| `POST`      | `/api/vaccines/{animal-id}` | add new vaccination to the animal      |
-| `PUT`       | `/api/vaccines/{id}`        | update vaccination                     |
-| `DELETE`    | `/api/vaccines/{id}`        | delete vaccination                     |
+| HTTP Method | HTTP Path                | Action                              |
+|-------------|--------------------------|-------------------------------------|
+| `GET`       | `/api/vaccines/{pet-id}` | get all vaccines applied to the pet |
+| `POST`      | `/api/vaccines/{pet-id}` | add new vaccination to the pet      |
+| `PUT`       | `/api/vaccines/{id}`     | update vaccination                  |
+| `DELETE`    | `/api/vaccines/{id}`     | delete vaccination                  |
 
 ### Appointments
 
-| HTTP Method | HTTP Path                  | Action                                           |
-|-------------|----------------------------|--------------------------------------------------|
-| `GET`       | `/api/appointments`        | get all appointments                             |
-| `GET`       | `/api/appointments/{id}`   | get appointment by id                            |
-| `GET`       | `/api/appointments/search` | search appointments by animal name AND/OR period |
-| `POST`      | `/api/appointments`        | add new appointment                              |
-| `PUT`       | `/api/appointments/{id}`   | update appointment                               |
-| `DELETE`    | `/api/appointments/{id}`   | delete appointment                               |
+| HTTP Method | HTTP Path                  | Action                                        |
+|-------------|----------------------------|-----------------------------------------------|
+| `GET`       | `/api/appointments`        | get all appointments                          |
+| `GET`       | `/api/appointments/{id}`   | get appointment by id                         |
+| `GET`       | `/api/appointments/search` | search appointments by pet name AND/OR period |
+| `POST`      | `/api/appointments`        | add new appointment                           |
+| `PUT`       | `/api/appointments/{id}`   | update appointment                            |
+| `DELETE`    | `/api/appointments/{id}`   | delete appointment                            |
 
 ### Workdays
 
@@ -90,7 +97,7 @@ title: YALNIZ API UML Structure
 ---
 classDiagram
     direction TB
-    Customer "1" <--> "*" Animal
+    Owner "1" <--> "*" Animal
     Animal "1" <--> "*" Vaccine
     Vet "1" <--> "*" Workday
     Appointment "*" <--> "1" Vet
@@ -106,7 +113,7 @@ classDiagram
         -LocalDate birthDate
     }
 
-    class Customer {
+    class Owner {
         -long id
         -String name
         -String phoneNumber
@@ -141,6 +148,110 @@ classDiagram
         -long id
         -LocalDateTime startDateTime
     }
+```
+
+## Request Body Templates
+
+### Animal
+
+The request body object is a modified version of the true Animal object.
+It is called AnimalBasicDto, for it does not contain the **vaccines** and **appointments** fields.
+
+It is used for POST and PUT requests.
+
+- For POST requests **id** and **ownerId** are optional.
+- For PUT requests **id** is required.
+  Note that **ownerId** is not required for PUT requests. If it is not provided, the owner of the pet will not be
+  changed.
+
+Additional notes:
+
+* To change vaccines of a pet, use the [**Vaccines**](#vaccines) endpoint.
+* To change appointments of a pet, use the [**Appointments**](#appointments) endpoint.
+
+```javascript
+[
+    {
+        "id": null,
+        "name": "string",
+        "species": "string",
+        "breed": "string",
+        "gender": "string",
+        "color": "string",
+        "birthDate": "yyyy-MM-dd",
+        "ownerId": null,
+    }
+]
+```
+
+### Owner
+
+```javascript
+[
+    {
+        "id": null,
+        "name": "string",
+        "phoneNumber": "string",
+        "email": "string",
+        "address": "string",
+        "city": "string",
+    }
+]
+```
+
+### Vet
+
+```javascript
+[
+    {
+        "id": null,
+        "name": "string",
+        "phoneNumber": "string",
+        "email": "string",
+        "address": "string",
+        "city": "string",
+    }
+]
+```
+
+### Vaccine
+
+```javascript
+[
+    {
+        "id": null,
+        "name": "string",
+        "code": "string",
+        "administrationDate": "yyyy-MM-dd",
+        "protectionEndDate": "yyyy-MM-dd",
+        "animalId": null,
+    }
+]
+```
+
+### Appointment
+
+```javascript
+[
+    {
+        "id": null,
+        "startDateTime": "yyyy-MM-dd HH:mm",
+        "vetId": null,
+        "animalId": null,
+    }
+]
+```
+
+### Workday
+
+```javascript
+[
+    {
+        "id": null,
+        "date": "yyyy-MM-dd",
+        "vetId": null,
+    }
+]
 ```
 
 ## What's in the name?

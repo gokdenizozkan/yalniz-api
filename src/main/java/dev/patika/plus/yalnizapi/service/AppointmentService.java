@@ -2,7 +2,6 @@ package dev.patika.plus.yalnizapi.service;
 
 import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDto;
 import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDtoDemapper;
-import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Appointment;
 import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
@@ -20,13 +19,11 @@ import java.util.Set;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentDtoDemapper appointmentDtoDemapper;
-    private final AppointmentDtoIntegrator appointmentDtoIntegrator;
     private final WorkdayRepository workdayRepository;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, AppointmentDtoDemapper appointmentDtoDemapper, AppointmentDtoIntegrator appointmentDtoIntegrator, WorkdayRepository workdayRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, AppointmentDtoDemapper appointmentDtoDemapper, WorkdayRepository workdayRepository) {
         this.appointmentRepository = appointmentRepository;
         this.appointmentDtoDemapper = appointmentDtoDemapper;
-        this.appointmentDtoIntegrator = appointmentDtoIntegrator;
         this.workdayRepository = workdayRepository;
     }
 
@@ -49,19 +46,6 @@ public class AppointmentService {
         else return ResponseBuilder.templateSuccess(appointment);
     }
 
-    public Response<Appointment> updateById(long id, AppointmentDto appointmentDto) {
-        Appointment appointment = appointmentDtoIntegrator.apply(appointmentDto);
-        return ResponseBuilder.templateSuccess(appointmentRepository.save(appointment));
-    }
-
-    public Response<Appointment> deleteById(long id) {
-        if (!appointmentRepository.existsById(id)) {
-            return ResponseBuilder.templateFail("Appointment with id " + id + " does not exist!");
-        }
-        appointmentRepository.deleteById(id);
-        return ResponseBuilder.templateSuccess(null);
-    }
-
     public Response<List<Appointment>> findAll() {
         return ResponseBuilder.templateSuccess(appointmentRepository.findAll());
     }
@@ -76,5 +60,26 @@ public class AppointmentService {
         LocalDateTime startLocalDateTime = LocalDateTime.of(startDate, LocalTime.of(0, 0));
         LocalDateTime endLocalDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
         return ResponseBuilder.templateSuccess(appointmentRepository.findAllByPetIdAndStartDateTimeBetween(petId, startLocalDateTime, endLocalDateTime));
+    }
+
+    public Response<Appointment> update(AppointmentDto appointmentDto) {
+        Long vetId = appointmentDto.vetId();
+        LocalDateTime startDateTime = appointmentDto.startDateTime();
+        boolean vetNotWorking = !workdayRepository.existsByVet_IdAndDate(vetId, startDateTime.toLocalDate());
+        if (vetNotWorking) return ResponseBuilder.templateFail("Vet is not working on " + startDateTime.toLocalDate());
+
+        boolean vetNotAvailable = appointmentRepository.existsByVet_IdAndStartDateTimeBetween(vetId, startDateTime, startDateTime.plusHours(1));
+        if (vetNotAvailable)
+            return ResponseBuilder.templateFail("Vet is not available between " + startDateTime + " and " + startDateTime.plusHours(1));
+
+        return ResponseBuilder.templateSuccess(appointmentRepository.save(appointmentDtoDemapper.apply(appointmentDto)));
+    }
+
+    public Response<Appointment> deleteById(long id) {
+        if (!appointmentRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Appointment with id " + id + " does not exist!");
+        }
+        appointmentRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 }

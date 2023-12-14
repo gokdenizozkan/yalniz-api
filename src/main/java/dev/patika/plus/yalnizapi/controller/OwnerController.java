@@ -5,7 +5,6 @@ import dev.patika.plus.yalnizapi.entity.Owner;
 import dev.patika.plus.yalnizapi.entity.Pet;
 import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.service.OwnerService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,64 +21,43 @@ public class OwnerController {
 
     @GetMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public ResponseEntity<List<Owner>> findAll() {
-        Response<List<Owner>> response = ownerService.findAll();
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<List<Owner>> findAll() {
+        return ownerService.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public ResponseEntity<Owner> findById(@PathVariable long id) {
-        Response<Owner> response = ownerService.findById(id);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<Owner> findById(@PathVariable long id) {
+        return ownerService.findById(id);
     }
 
     @GetMapping("/search")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public ResponseEntity<List<Owner>> search(@RequestParam(value = "name") String query) {
-        Response<List<Owner>> response = ownerService.search(query);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<List<Owner>> search(@RequestParam(value = "name") String query) {
+        return ownerService.search(query);
     }
 
     @GetMapping("/{id}/pets")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public ResponseEntity<Set<Pet>> findPetsById(@PathVariable long id) {
-        Response<Set<Pet>> response = ownerService.findPetsById(id);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<Set<Pet>> findPetsById(@PathVariable long id) {
+        return ownerService.findPetsById(id);
     }
 
     @PostMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
-    public ResponseEntity<Owner> save(@RequestBody OwnerDto ownerDto) {
-        Response<Owner> response = ownerService.save(ownerDto);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<Owner> save(@RequestBody OwnerDto ownerDto) {
+        return ownerService.save(ownerDto);
     }
 
     @PutMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.ACCEPTED)
-    public ResponseEntity<Owner> update(@RequestBody OwnerDto ownerDto) {
-        Response<Owner> response = ownerService.updateById(ownerDto);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<Owner> update(@RequestBody OwnerDto ownerDto) {
+        return ownerService.updateById(ownerDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
-    public ResponseEntity<Owner> deleteById(@PathVariable long id) {
-        Response<Owner> response = ownerService.deleteById(id);
-        return ResponseEntity
-                .status(response.code())
-                .body(response.data());
+    public Response<Owner> deleteById(@PathVariable long id) {
+        return ownerService.deleteById(id);
     }
 }

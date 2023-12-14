@@ -74,6 +74,8 @@ It is a project for the bootcamp Patika+ given by [Patika](https://patika.dev).
 | `GET`       | `/api/vet/{id}?startDate=YYYY-MM-dd&endDate=YYYY-MM-dd` | get appointments of vet in the given period |
 | `GET`       | `/api/pet/{id}?startDate=YYYY-MM-dd&endDate=YYYY-MM-dd` | get appointments of pet in the given period |
 | `POST`      | `/api/appointments/`                                    | add new appointment                         |
+| `PUT`       | `/api/appointments/`                                    | update appointment                          |
+| `DELETE`    | `/api/appointments/{id}`                                | delete appointment                          |
 
 ### Workdays
 
@@ -162,7 +164,7 @@ It is used for POST and PUT requests.
 
 Additional notes:
 
-* To change vaccines of a pet, use the [**Vaccines**](#vaccines) endpoint.
+* To change vaccines of a pet, use the [**Vaccinations**](#vaccinations) endpoint.
 * To change appointments of a pet, use the [**Appointments**](#appointments) endpoint.
 
 ```json

@@ -4,11 +4,12 @@ import dev.patika.plus.yalnizapi.dto.pet.PetDto;
 import dev.patika.plus.yalnizapi.dto.pet.PetDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.pet.PetDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Pet;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.PetRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class PetService {
@@ -22,38 +23,31 @@ public class PetService {
         this.petDtoDemapper = petDtoDemapper;
     }
 
-    public Pet findById(long id) {
-        return petRepository.findById(id).orElseThrow();
+    public Response<Pet> findById(long id) {
+        return ResponseBuilder.auto(petRepository.findById(id).orElse(null));
     }
 
-    /*
-        public Set<Appointment> findAnimalByIdAndRetrieveAppointments(long id) {
-            return animalRepository.findById(id).orElseThrow().getAppointments();
+    public Response<List<Pet>> findAll() {
+        return ResponseBuilder.templateSuccess(petRepository.findAll());
+    }
+
+    public Response<List<Pet>> search(String query) {
+        return ResponseBuilder.templateSuccess(petRepository.search(query));
+    }
+
+    public Response<Pet> save(PetDto petDto) {
+        return ResponseBuilder.templateSuccess(petRepository.save(petDtoDemapper.apply(petDto)));
+    }
+
+    public Response<Pet> update(PetDto petDto) {
+        return ResponseBuilder.templateSuccess(petRepository.save(petDtoIntegrator.apply(petDto)));
+    }
+
+    public Response<Pet> deleteById(long id) {
+        if (!petRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Pet with id " + id + " does not exist!");
         }
-
-        public Set<Vaccine> findAnimalByIdAndRetrieveVaccines(long id) {
-            return animalRepository.findById(id).orElseThrow().getVaccines();
-        }
-    */
-    public List<Pet> findAll() {
-        return petRepository.findAll();
-    }
-
-    public Set<Pet> search(String query) {
-        return petRepository.findByNameLikeIgnoreCase(query);
-    }
-
-    public Pet save(PetDto petDto) {
-        return petRepository.save(petDtoDemapper.apply(petDto));
-    }
-
-    public void updateById(long id, PetDto petDto) {
-        petRepository.save(petDtoIntegrator.apply(petDto));
-    }
-
-    public void deleteById(long id) {
         petRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
-
-
 }

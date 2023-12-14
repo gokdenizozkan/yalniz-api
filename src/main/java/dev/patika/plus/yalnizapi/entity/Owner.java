@@ -27,7 +27,7 @@ public class Owner {
     private String address;
     private String city;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Pet> pets = new LinkedHashSet<>();
 

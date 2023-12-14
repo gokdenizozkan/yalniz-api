@@ -2,14 +2,16 @@ package dev.patika.plus.yalnizapi.controller;
 
 import dev.patika.plus.yalnizapi.dto.vaccination.VaccinationDto;
 import dev.patika.plus.yalnizapi.entity.Vaccination;
+import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.service.VaccinationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vaccines")
+@RequestMapping("/api/vaccinations")
 public class VaccinationController {
     private final VaccinationService vaccinationService;
 
@@ -19,45 +21,65 @@ public class VaccinationController {
 
     @GetMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Vaccination> findAll() {
-        return vaccinationService.findAll();
-    }
-
-    @GetMapping("/ending-soon")
-    @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Vaccination> findAllEndingSoon(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        return vaccinationService.findAllEndingSoon(startDate, endDate);
-    }
-
-    @GetMapping("/of-pet/{petId}")
-    @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Vaccination> findAllByPetId(@PathVariable long petId) {
-        return vaccinationService.findAllByPetId(petId);
+    public ResponseEntity<List<Vaccination>> findAll() {
+        Response<List<Vaccination>> response = vaccinationService.findAll();
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Vaccination findById(@PathVariable long id) {
-        return vaccinationService.findById(id);
+    public ResponseEntity<Vaccination> findById(@PathVariable long id) {
+        Response<Vaccination> response = vaccinationService.findById(id);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
+    @GetMapping("/ending-soon")
+    @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
+    public ResponseEntity<List<Vaccination>> findAllEndingSoon(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        Response<List<Vaccination>> response = vaccinationService.findAllEndingSoon(startDate, endDate);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
+    }
 
-    @PostMapping("/of-pet/{petId}")
+    @GetMapping("/of-pet/{petId}")
+    @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
+    public ResponseEntity<List<Vaccination>> findAllByPetId(@PathVariable long petId) {
+        Response<List<Vaccination>> response = vaccinationService.findAllByPetId(petId);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
+    }
+
+    @PostMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
-    public Vaccination saveOfPet(@PathVariable long petId, @RequestBody VaccinationDto vaccinationDto) {
-        return vaccinationService.saveByPetId(petId, vaccinationDto);
+    public ResponseEntity<Vaccination> saveOfPet(@RequestBody VaccinationDto vaccinationDto) {
+        Response<Vaccination> response = vaccinationService.save(vaccinationDto);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.ACCEPTED)
-    public void updateById(@PathVariable long id, @RequestBody VaccinationDto vaccinationDto) {
-        vaccinationService.updateById(id, vaccinationDto);
+    public ResponseEntity<Vaccination> updateById(@RequestBody VaccinationDto vaccinationDto) {
+        Response<Vaccination> response = vaccinationService.update(vaccinationDto);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable long id) {
-        vaccinationService.deleteById(id);
+    public ResponseEntity<Vaccination> deleteById(@PathVariable long id) {
+        Response<Vaccination> response = vaccinationService.deleteById(id);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
 

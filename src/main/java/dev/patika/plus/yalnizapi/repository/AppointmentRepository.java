@@ -11,5 +11,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Set<Appointment> findAllByVetIdAndStartDateTimeBetween(long vetId, LocalDateTime startDateTime, LocalDateTime endLocalDateTime);
 
+    boolean existsByVet_IdAndStartDateTimeBetween(Long id, LocalDateTime startDateTimeStart, LocalDateTime startDateTimeEnd);
+
     Set<Appointment> findAllByPetIdAndStartDateTimeBetween(long animalId, LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime);
 }

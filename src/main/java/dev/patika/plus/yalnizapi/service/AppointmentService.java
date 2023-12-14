@@ -4,8 +4,10 @@ import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDto;
 import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Appointment;
-import dev.patika.plus.yalnizapi.entity.Workday;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.AppointmentRepository;
+import dev.patika.plus.yalnizapi.repository.WorkdayRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,74 +21,60 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentDtoDemapper appointmentDtoDemapper;
     private final AppointmentDtoIntegrator appointmentDtoIntegrator;
+    private final WorkdayRepository workdayRepository;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, AppointmentDtoDemapper appointmentDtoDemapper, AppointmentDtoIntegrator appointmentDtoIntegrator) {
+    public AppointmentService(AppointmentRepository appointmentRepository, AppointmentDtoDemapper appointmentDtoDemapper, AppointmentDtoIntegrator appointmentDtoIntegrator, WorkdayRepository workdayRepository) {
         this.appointmentRepository = appointmentRepository;
         this.appointmentDtoDemapper = appointmentDtoDemapper;
         this.appointmentDtoIntegrator = appointmentDtoIntegrator;
+        this.workdayRepository = workdayRepository;
     }
 
-    public Appointment save(AppointmentDto appointmentDto) {
-        // Check if vet is working on the appointment day
-        Appointment appointment = appointmentDtoDemapper.apply(appointmentDto);
+    public Response<Appointment> save(AppointmentDto appointmentDto) {
+        Long vetId = appointmentDto.vetId();
+        LocalDateTime startDateTime = appointmentDto.startDateTime();
+        boolean vetNotWorking = !workdayRepository.existsByVet_IdAndDate(vetId, startDateTime.toLocalDate());
+        if (vetNotWorking) return ResponseBuilder.templateFail("Vet is not working on " + startDateTime.toLocalDate());
 
-        Set<Workday> workdays = appointment.getVet().getWorkdays();
-        LocalDate appointmentDay = appointment.getStartDateTime().toLocalDate();
+        boolean vetNotAvailable = appointmentRepository.existsByVet_IdAndStartDateTimeBetween(vetId, startDateTime, startDateTime.plusHours(1));
+        if (vetNotAvailable)
+            return ResponseBuilder.templateFail("Vet is not available between " + startDateTime + " and " + startDateTime.plusHours(1));
 
-        boolean vetNotWorking = true;
-        for (Workday workday : workdays) {
-            LocalDate date = workday.getDate();
-            if (date.equals(appointmentDay)) {
-                vetNotWorking = false;
-                break;
-            }
-        }
-        if (vetNotWorking) throw new RuntimeException("Vet is not working on " + appointmentDay);
-
-        // Check if vet is available on the appointment time
-        LocalTime appointmentTime = appointment.getStartDateTime().toLocalTime();
-        Set<Appointment> appointmentsOfVet = appointment.getVet().getAppointments();
-
-        boolean vetAvailable = false;
-        for (Appointment appointmentOfVet : appointmentsOfVet) {
-            LocalTime startTime = appointmentOfVet.getStartDateTime().toLocalTime(); // 05:00
-            LocalTime endTime = startTime.plusHours(1); // 06:00
-            if (startTime.isBefore(appointmentTime) && endTime.isAfter(appointmentTime)) { // 05:00 < 05:30 < 06:00
-                vetAvailable = true;
-                break;
-            }
-        }
-        if (!vetAvailable) throw new RuntimeException("Vet is not available on " + appointmentTime);
-
-        return appointmentRepository.save(appointment);
+        return ResponseBuilder.templateSuccess(appointmentRepository.save(appointmentDtoDemapper.apply(appointmentDto)));
     }
 
-    public Appointment findById(long id) {
-        return appointmentRepository.findById(id).orElseThrow();
+    public Response<Appointment> findById(long id) {
+        Appointment appointment = appointmentRepository.findById(id).orElse(null);
+        if (appointment == null) return ResponseBuilder.templateFail("Appointment not found");
+        else return ResponseBuilder.templateSuccess(appointment);
     }
 
-    public Appointment updateById(long id, AppointmentDto appointmentDto) {
+    public Response<Appointment> updateById(long id, AppointmentDto appointmentDto) {
         Appointment appointment = appointmentDtoIntegrator.apply(appointmentDto);
-        return appointmentRepository.save(appointment);
+        return ResponseBuilder.templateSuccess(appointmentRepository.save(appointment));
     }
 
-    public void deleteById(long id) {
+    public Response<Appointment> deleteById(long id) {
+        if (!appointmentRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Appointment with id " + id + " does not exist!");
+        }
         appointmentRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 
-    public List<Appointment> findAll() {
-        return appointmentRepository.findAll();
+    public Response<List<Appointment>> findAll() {
+        return ResponseBuilder.templateSuccess(appointmentRepository.findAll());
     }
 
-    public Set<Appointment> findAllByVetIdAndStartDateTimeBetween(long vetId, LocalDate startDate, LocalDate endDate) {
+    public Response<Set<Appointment>> findAllByVetIdAndStartDateTimeBetween(long vetId, LocalDate startDate, LocalDate endDate) {
         LocalDateTime startLocalDateTime = LocalDateTime.of(startDate, LocalTime.of(0, 0));
         LocalDateTime endLocalDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
-        return appointmentRepository.findAllByVetIdAndStartDateTimeBetween(vetId, startLocalDateTime, endLocalDateTime);
+        return ResponseBuilder.templateSuccess(appointmentRepository.findAllByVetIdAndStartDateTimeBetween(vetId, startLocalDateTime, endLocalDateTime));
     }
 
-    public Set<Appointment> findAllByPetIdAndStartDateTimeBetween(long petId, LocalDate startDate, LocalDate endDate) {
+    public Response<Set<Appointment>> findAllByPetIdAndStartDateTimeBetween(long petId, LocalDate startDate, LocalDate endDate) {
         LocalDateTime startLocalDateTime = LocalDateTime.of(startDate, LocalTime.of(0, 0));
         LocalDateTime endLocalDateTime = LocalDateTime.of(endDate, LocalTime.of(23, 59));
-        return appointmentRepository.findAllByPetIdAndStartDateTimeBetween(petId, startLocalDateTime, endLocalDateTime);
+        return ResponseBuilder.templateSuccess(appointmentRepository.findAllByPetIdAndStartDateTimeBetween(petId, startLocalDateTime, endLocalDateTime));
     }
 }

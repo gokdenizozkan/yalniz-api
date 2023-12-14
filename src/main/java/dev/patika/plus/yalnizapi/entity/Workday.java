@@ -22,8 +22,8 @@ public class Workday {
     private LocalDate date;
 
     @ToString.Exclude
-    @ManyToOne()
-    @JoinColumn(name = "vet_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "vet_id", referencedColumnName = "id")
     @JsonIgnore
     private Vet vet;
 

@@ -1,0 +1,382 @@
+POST localhost:8080/api/owners/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Rıfat",
+  "phoneNumber": "+154895468764",
+  "email": "rifatboi@gmail.com",
+  "address": "Soygun Mah. Muza Binmiş Sok. 5/74",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/owners/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Necmi",
+  "phoneNumber": "+10004879788",
+  "email": "necmi@outlook.com",
+  "address": "Soygun Mah. Muza Binmiş Sok. 88/4",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/owners/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Ali",
+  "phoneNumber": "+12312312321",
+  "email": "ali@outlook.com",
+  "address": "Mahmut Mah. Elmaya Binmiş Sok. 2/4",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/owners/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Hazal",
+  "phoneNumber": "+56762353245",
+  "email": "hzl@hzl.com",
+  "address": "Melimalı Mah. Jaja Sok. 1/4",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/owners/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Ahmet",
+  "phoneNumber": "+6756756",
+  "email": "h@outlook.com",
+  "address": "Uuuu Mah. Uwu Sok. 666/9",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "rıfkı",
+  "species": "kara kaplumbağası",
+  "breed": "kaplumbağa",
+  "gender": "dişi",
+  "color": "kahve",
+  "birthDate": "2023-10-11",
+  "ownerId": 1
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "boncuk",
+  "species": "kedi",
+  "breed": "tekir",
+  "gender": "dişi",
+  "color": "sarı",
+  "birthDate": "2023-07-10",
+  "ownerId": 2
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "maviş",
+  "species": "kedi",
+  "breed": "van kedisi",
+  "gender": "dişi",
+  "color": "beyaz",
+  "birthDate": "2022-01-01",
+  "ownerId": 2
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "zabzub",
+  "species": "kedi",
+  "breed": "tekir",
+  "gender": "dişi",
+  "color": "sarı",
+  "birthDate": "2023-07-10",
+  "ownerId": 4
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "kamkum",
+  "species": "kedi",
+  "breed": "tekir",
+  "gender": "dişi",
+  "color": "sarı",
+  "birthDate": "2023-07-10",
+  "ownerId": 5
+}
+
+###
+POST localhost:8080/api/pets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "ırki",
+  "species": "köpüş",
+  "breed": "hav hav",
+  "gender": "eril",
+  "color": "siyah",
+  "birthDate": "2023-07-10",
+  "ownerId": 4
+}
+
+###
+POST localhost:8080/api/vets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Halim",
+  "phoneNumber": "+154897824",
+  "email": "dr-halim@daclinic.com",
+  "address": "Soygun Mah. Muza Binmiş Sok. 1/2",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/vets/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Alexander",
+  "phoneNumber": "+998724948",
+  "email": "vet-alex@daclinic.com",
+  "address": "Soygun Mah. Muza Binmiş Sok. 1/2",
+  "city": "Kestanbul"
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-01",
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-02",
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-03",
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-04",
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-05",
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-04",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-05",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-06",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-07",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-08",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-09",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/workdays/
+Content-Type: application/json
+
+{
+  "id": null,
+  "date": "2024-01-10",
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/appointments/
+Content-Type: application/json
+
+{
+  "id": null,
+  "startDateTime": "2024-01-01T15:00",
+  "petId": 1,
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/appointments/
+Content-Type: application/json
+
+{
+  "id": null,
+  "startDateTime": "2024-01-01T17:00",
+  "petId": 2,
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/appointments/
+Content-Type: application/json
+
+{
+  "id": null,
+  "startDateTime": "2024-01-02T19:00",
+  "petId": 3,
+  "vetId": 1
+}
+
+###
+POST localhost:8080/api/appointments/
+Content-Type: application/json
+
+{
+  "id": null,
+  "startDateTime": "2024-01-04T14:00",
+  "petId": 3,
+  "vetId": 2
+}
+
+###
+POST localhost:8080/api/vaccinations/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Biontech",
+  "code": "Bpet98",
+  "administrationDate": "2024-01-01",
+  "protectionEndDate": "2025-01-01",
+  "petId": 1
+}
+
+###
+POST localhost:8080/api/vaccinations/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Biontech",
+  "code": "Bpet98",
+  "administrationDate": "2024-01-03",
+  "protectionEndDate": "2025-01-03",
+  "petId": 2
+}
+
+###
+POST localhost:8080/api/vaccinations/
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Biontech",
+  "code": "Bpet98",
+  "administrationDate": "2022-01-01",
+  "protectionEndDate": "2023-01-01",
+  "petId": 3
+}

@@ -4,6 +4,8 @@ import dev.patika.plus.yalnizapi.dto.vaccination.VaccinationDto;
 import dev.patika.plus.yalnizapi.dto.vaccination.VaccinationDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.vaccination.VaccinationDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Vaccination;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.VaccinationRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,55 +24,41 @@ public class VaccinationService {
         this.vaccinationDtoIntegrator = vaccinationDtoIntegrator;
     }
 
-    public List<Vaccination> findAll() {
-        return vaccinationRepository.findAll();
+    public Response<List<Vaccination>> findAll() {
+        return ResponseBuilder.templateSuccess(vaccinationRepository.findAll());
     }
 
-    public List<Vaccination> findAllByPetId(long petId) {
-        return vaccinationRepository.findAllByPet_IdOrderByProtectionEndDateDesc(petId);
+    public Response<List<Vaccination>> findAllByPetId(long petId) {
+        return ResponseBuilder.templateSuccess(vaccinationRepository.findAllByPet_IdOrderByProtectionEndDateDesc(petId));
     }
 
-    public Vaccination findById(long id) {
-        return vaccinationRepository.findById(id).orElseThrow();
+    public Response<Vaccination> findById(long id) {
+        return ResponseBuilder.templateSuccess(vaccinationRepository.findById(id).orElse(null));
     }
 
-    public Vaccination saveByPetId(long petId, VaccinationDto vaccinationDto) {
+    public Response<Vaccination> save(VaccinationDto vaccinationDto) {
         Vaccination vaccination = vaccinationDtoDemapper.apply(vaccinationDto);
 
-        // Check if the vaccination is already exists.
-        List<Vaccination> vacsOfAnimal = vaccinationRepository.findAllByCodeIgnoreCaseAndPet_IdOrderByProtectionEndDateDesc(vaccination.getCode(), petId);
-
-        if (vacsOfAnimal.isEmpty()) {
-            return vaccinationRepository.save(vaccination);
+        Vaccination intactVaccination = vaccinationRepository.findVaccinationThatIsStillIntact(vaccination.getPet().getId(), vaccination.getAdministrationDate(), vaccination.getCode());
+        if (intactVaccination != null) {
+            return ResponseBuilder.templateFail("Vaccination already intact!");
         }
-
-        for (Vaccination vac : vacsOfAnimal) {
-            if (vac.getProtectionEndDate().isBefore(vaccination.getAdministrationDate())) {
-                throw new RuntimeException("Cannot administer the vaccine because the previous one is still intact.");
-            }
-        }
-        return vaccinationRepository.save(vaccination);
+        return ResponseBuilder.templateSuccess(vaccinationRepository.save(vaccination));
     }
 
-    public Vaccination updateById(long id, VaccinationDto vaccinationDto) {
-        VaccinationDto vaccinationDtoWithId = new VaccinationDto(
-                id,
-                vaccinationDto.name(),
-                vaccinationDto.code(),
-                vaccinationDto.administrationDate(),
-                vaccinationDto.protectionEndDate(),
-                vaccinationDto.petId()
-        );
-
-        Vaccination vaccination = vaccinationDtoIntegrator.apply(vaccinationDtoWithId);
-        return vaccinationRepository.save(vaccination);
+    public Response<Vaccination> update(VaccinationDto vaccinationDto) {
+        return ResponseBuilder.templateSuccess(vaccinationRepository.save(vaccinationDtoIntegrator.apply(vaccinationDto)));
     }
 
-    public void deleteById(long id) {
+    public Response<Vaccination> deleteById(long id) {
+        if (!vaccinationRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Vaccination with id " + id + " does not exist!");
+        }
         vaccinationRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 
-    public List<Vaccination> findAllEndingSoon(LocalDate startDate, LocalDate endDate) {
-        return vaccinationRepository.findAllByProtectionEndDateBetween(startDate, endDate);
+    public Response<List<Vaccination>> findAllEndingSoon(LocalDate startDate, LocalDate endDate) {
+        return ResponseBuilder.templateSuccess(vaccinationRepository.findAllByProtectionEndDateBetween(startDate, endDate));
     }
 }

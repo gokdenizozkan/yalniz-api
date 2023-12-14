@@ -4,6 +4,8 @@ import dev.patika.plus.yalnizapi.dto.workday.WorkdayDto;
 import dev.patika.plus.yalnizapi.dto.workday.WorkdayDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.workday.WorkdayDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Workday;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.WorkdayRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,26 +24,28 @@ public class WorkdayService {
         this.workdayDtoIntegrator = workdayDtoIntegrator;
     }
 
-    public List<Workday> findAll() {
-        return workdayRepository.findAll();
+    public Response<List<Workday>> findAll() {
+        return ResponseBuilder.templateSuccess(workdayRepository.findAll());
     }
 
-    public Workday findById(long id) {
-        return workdayRepository.findById(id).orElseThrow();
+    public Response<Workday> findById(long id) {
+        return ResponseBuilder.auto(workdayRepository.findById(id).orElse(null));
     }
 
-    public Workday save(WorkdayDto workdayDto) {
+    public Response<Workday> save(WorkdayDto workdayDto) {
         Workday workday = workdayDtoDemapper.apply(workdayDto);
-        return workdayRepository.save(workday);
+        return ResponseBuilder.templateSuccess(workdayRepository.save(workday));
     }
 
-    public Workday update(long id, WorkdayDto workdayDto) {
-        WorkdayDto workdayDtoWithId = new WorkdayDto(id, workdayDto.date(), workdayDto.vetId());
-        Workday workday = workdayDtoIntegrator.apply(workdayDtoWithId);
-        return workdayRepository.save(workday);
+    public Response<Workday> update(WorkdayDto workdayDto) {
+        return ResponseBuilder.templateSuccess(workdayRepository.save(workdayDtoIntegrator.apply(workdayDto)));
     }
 
-    public void deleteById(long id) {
+    public Response<Workday> deleteById(long id) {
+        if (!workdayRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Workday with id " + id + " does not exist!");
+        }
         workdayRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 }

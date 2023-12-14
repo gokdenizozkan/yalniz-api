@@ -2,7 +2,9 @@ package dev.patika.plus.yalnizapi.controller;
 
 import dev.patika.plus.yalnizapi.dto.appointment.AppointmentDto;
 import dev.patika.plus.yalnizapi.entity.Appointment;
+import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.service.AppointmentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,25 +22,39 @@ public class AppointmentController {
 
     @GetMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Appointment> findAll() {
-        return appointmentService.findAll();
+    public ResponseEntity<List<Appointment>> findAll() {
+        Response<List<Appointment>> response = appointmentService.findAll();
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @GetMapping("/vet/{vetId}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Set<Appointment> findAllByVetIdAndStartDateTimeBetween(@PathVariable long vetId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        return appointmentService.findAllByVetIdAndStartDateTimeBetween(vetId, startDate, endDate);
+    public ResponseEntity<Set<Appointment>> findAllByVetIdAndStartDateTimeBetween(@PathVariable long vetId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        Response<Set<Appointment>> response = appointmentService.findAllByVetIdAndStartDateTimeBetween(vetId, startDate, endDate);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @GetMapping("/pet/{petId}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Set<Appointment> findAllByPetIdAndStartDateTimeBetween(@PathVariable long petId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        return appointmentService.findAllByPetIdAndStartDateTimeBetween(petId, startDate, endDate);
+    public ResponseEntity<Set<Appointment>> findAllByPetIdAndStartDateTimeBetween(@PathVariable long petId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        Response<Set<Appointment>> response = appointmentService.findAllByPetIdAndStartDateTimeBetween(petId, startDate, endDate);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @PostMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
-    public Appointment save(AppointmentDto appointmentDto) {
-        return appointmentService.save(appointmentDto);
+    public ResponseEntity<Appointment> save(@RequestBody AppointmentDto appointmentDto) {
+        Response<Appointment> response = appointmentService.save(appointmentDto);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
+
+    // TODO put and delete mappings
 }

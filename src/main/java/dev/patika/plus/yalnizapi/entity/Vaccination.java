@@ -25,7 +25,7 @@ public class Vaccination {
     private LocalDate protectionEndDate;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "animal_id")
+    @JoinColumn(name = "pet_id", referencedColumnName = "id")
     @JsonIgnore
     private Pet pet;
 

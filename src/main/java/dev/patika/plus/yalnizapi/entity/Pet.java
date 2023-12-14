@@ -30,19 +30,18 @@ public class Pet {
     private LocalDate birthDate;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "pet", orphanRemoval = true)
-    @JsonIgnore
-    private Set<Appointment> appointments = new LinkedHashSet<>();
-
-    @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     @JsonIgnore
     private Owner owner;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<Appointment> appointments = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Vaccination> vaccinations = new LinkedHashSet<>();
-
 }

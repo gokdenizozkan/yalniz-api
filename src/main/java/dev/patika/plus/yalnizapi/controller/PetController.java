@@ -2,12 +2,12 @@ package dev.patika.plus.yalnizapi.controller;
 
 import dev.patika.plus.yalnizapi.dto.pet.PetDto;
 import dev.patika.plus.yalnizapi.entity.Pet;
+import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.service.PetService;
-import jakarta.websocket.server.PathParam;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -21,51 +21,55 @@ public class PetController {
 
     @GetMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Pet> findAll() {
-        return petService.findAll();
+    public ResponseEntity<List<Pet>> findAll() {
+        Response<List<Pet>> response = petService.findAll();
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Pet findById(@PathVariable long id) {
-        return petService.findById(id);
+    public ResponseEntity<Pet> findById(@PathVariable long id) {
+        Response<Pet> response = petService.findById(id);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
-
-    /*
-        @GetMapping("/{id}/appointments")
-        public Set<Appointment> findAnimalByIdAndRetrieveAppointments(@PathVariable long id) {
-            return animalService.findAnimalByIdAndRetrieveAppointments(id);
-        }
-
-        @GetMapping("/{id}/vaccines")
-        public Set<Vaccine> findAnimalByIdAndRetrieveVaccines(@PathVariable long id) {
-            return animalService.findAnimalByIdAndRetrieveVaccines(id);
-        }
-    */
 
     @GetMapping("/search")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Set<Pet> search(@PathParam(value = "name") String query) {
-        return petService.search(query);
+    public ResponseEntity<List<Pet>> search(@RequestParam(value = "name") String query) {
+        Response<List<Pet>> response = petService.search(query);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @PostMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
-    public Pet save(@RequestBody PetDto petDto) {
-        return petService.save(petDto);
+    public ResponseEntity<Pet> save(@RequestBody PetDto petDto) {
+        Response<Pet> response = petService.save(petDto);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.ACCEPTED)
-    public void update(@PathVariable long id, @RequestBody PetDto petDto) {
-        petService.updateById(id, petDto);
+    public ResponseEntity<Pet> update(@RequestBody PetDto petDto) {
+        Response<Pet> response = petService.update(petDto);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable long id) {
-        petService.deleteById(id);
+    public ResponseEntity<Pet> deleteById(@PathVariable long id) {
+        Response<Pet> response = petService.deleteById(id);
+        return ResponseEntity
+                .status(response.code())
+                .body(response.data());
     }
-
-
 }

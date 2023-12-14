@@ -27,11 +27,11 @@ public class Vet {
     private String address;
     private String city;
 
-    @OneToMany(mappedBy = "vet")
+    @OneToMany(mappedBy = "vet", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Appointment> appointments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "vet")
+    @OneToMany(mappedBy = "vet", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Workday> workdays = new LinkedHashSet<>();
 

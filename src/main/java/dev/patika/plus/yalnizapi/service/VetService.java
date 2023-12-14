@@ -5,6 +5,8 @@ import dev.patika.plus.yalnizapi.dto.vet.VetDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.vet.VetDtoIntegrator;
 import dev.patika.plus.yalnizapi.dto.vet.VetDtoMapper;
 import dev.patika.plus.yalnizapi.entity.Vet;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.VetRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,23 +26,27 @@ public class VetService {
         this.vetDtoDemapper = vetDtoDemapper;
     }
 
-    public List<Vet> findAll() {
-        return vetRepository.findAll();
+    public Response<List<Vet>> findAll() {
+        return ResponseBuilder.templateSuccess(vetRepository.findAll());
     }
 
-    public Vet findById(Long id) {
-        return vetRepository.findById(id).orElseThrow();
+    public Response<Vet> findById(Long id) {
+        return ResponseBuilder.auto(vetRepository.findById(id).orElse(null));
     }
 
-    public Vet save(VetDto vetDto) {
-        return vetRepository.save(vetDtoDemapper.apply(vetDto));
+    public Response<Vet> save(VetDto vetDto) {
+        return ResponseBuilder.templateSuccess(vetRepository.save(vetDtoDemapper.apply(vetDto)));
     }
 
-    public Vet update(Long id, VetDto vetDto) {
-        return vetRepository.save(vetDtoIntegrator.apply(vetDto));
+    public Response<Vet> update(VetDto vetDto) {
+        return ResponseBuilder.templateSuccess(vetRepository.save(vetDtoIntegrator.apply(vetDto)));
     }
 
-    public void deleteById(Long id) {
+    public Response<Vet> deleteById(Long id) {
+        if (!vetRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Vet with id " + id + " does not exist!");
+        }
         vetRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 }

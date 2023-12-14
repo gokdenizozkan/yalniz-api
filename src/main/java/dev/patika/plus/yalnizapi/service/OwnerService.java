@@ -4,10 +4,14 @@ import dev.patika.plus.yalnizapi.dto.owner.OwnerDto;
 import dev.patika.plus.yalnizapi.dto.owner.OwnerDtoDemapper;
 import dev.patika.plus.yalnizapi.dto.owner.OwnerDtoIntegrator;
 import dev.patika.plus.yalnizapi.entity.Owner;
+import dev.patika.plus.yalnizapi.entity.Pet;
+import dev.patika.plus.yalnizapi.entity.response.Response;
+import dev.patika.plus.yalnizapi.entity.response.ResponseBuilder;
 import dev.patika.plus.yalnizapi.repository.OwnerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -22,30 +26,38 @@ public class OwnerService {
         this.ownerDtoIntegrator = ownerDtoIntegrator;
     }
 
-    public Owner findById(long id) {
-        return ownerRepository.findById(id).orElseThrow();
+    public Response<Owner> findById(long id) {
+        return ResponseBuilder.auto(ownerRepository.findById(id).orElse(null));
     }
 
-    public List<Owner> findAll() {
-        return ownerRepository.findAll();
+    public Response<List<Owner>> findAll() {
+        return ResponseBuilder.auto(ownerRepository.findAll());
     }
 
-    public Owner save(OwnerDto ownerDto) {
+    public Response<Owner> save(OwnerDto ownerDto) {
         Owner owner = ownerDtoDemapper.apply(ownerDto);
-        return ownerRepository.save(owner);
+        return ResponseBuilder.templateSuccess(ownerRepository.save(owner));
     }
 
-    public Owner updateById(long id, OwnerDto ownerDto) {
-        OwnerDto ownerWithId = new OwnerDto(id, ownerDto.name(), ownerDto.phoneNumber(), ownerDto.email(), ownerDto.address(), ownerDto.city());
-        Owner owner = ownerDtoIntegrator.apply(ownerWithId);
-        return ownerRepository.save(owner);
+    public Response<Owner> updateById(OwnerDto ownerDto) {
+        return ResponseBuilder.templateSuccess(ownerRepository.save(ownerDtoIntegrator.apply(ownerDto)));
     }
 
-    public void deleteById(long id) {
+    public Response<Owner> deleteById(long id) {
+        if (!ownerRepository.existsById(id)) {
+            return ResponseBuilder.templateFail("Owner with id " + id + " does not exist!");
+        }
         ownerRepository.deleteById(id);
+        return ResponseBuilder.templateSuccess(null);
     }
 
-    public Set<Owner> search(String query) {
-        return ownerRepository.findByNameLikeIgnoreCase(query);
+    public Response<List<Owner>> search(String query) {
+        return ResponseBuilder.templateSuccess(ownerRepository.search(query));
+    }
+
+    public Response<Set<Pet>> findPetsById(long id) {
+        Optional<Owner> ownerOptional = ownerRepository.findById(id);
+        if (ownerOptional.isEmpty()) return ResponseBuilder.templateFail("Owner not found");
+        return ResponseBuilder.templateSuccess(ownerOptional.get().getPets());
     }
 }

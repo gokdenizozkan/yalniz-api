@@ -3,6 +3,8 @@ package dev.patika.plus.yalnizapi.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.time.LocalDateTime;
 
@@ -22,13 +24,14 @@ public class Appointment {
     private LocalDateTime startDateTime;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "animal_id")
+    @JoinColumn(name = "pet_id")
     @JsonIgnore
     private Pet pet;
 
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "vet_id")
+    @NotFound(action = NotFoundAction.IGNORE)
     @JsonIgnore
     private Vet vet;
 

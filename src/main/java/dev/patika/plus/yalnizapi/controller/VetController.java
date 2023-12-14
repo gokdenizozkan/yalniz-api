@@ -2,7 +2,9 @@ package dev.patika.plus.yalnizapi.controller;
 
 import dev.patika.plus.yalnizapi.dto.vet.VetDto;
 import dev.patika.plus.yalnizapi.entity.Vet;
+import dev.patika.plus.yalnizapi.entity.response.Response;
 import dev.patika.plus.yalnizapi.service.VetService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +20,37 @@ public class VetController {
 
     @GetMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public List<Vet> findAll() {
-        return vetService.findAll();
+    public ResponseEntity<List<Vet>> findAll() {
+        Response<List<Vet>> response = vetService.findAll();
+        return ResponseEntity.status(response.code()).body(response.data());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.OK)
-    public Vet findById(@PathVariable Long id) {
-        return vetService.findById(id);
+    public ResponseEntity<Vet> findById(@PathVariable Long id) {
+        Response<Vet> response = vetService.findById(id);
+        return ResponseEntity.status(response.code()).body(response.data());
     }
 
 
     @PostMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.CREATED)
-    public Vet save(@RequestBody VetDto vetDto) {
-        return vetService.save(vetDto);
+    public ResponseEntity<Vet> save(@RequestBody VetDto vetDto) {
+        Response<Vet> response = vetService.save(vetDto);
+        return ResponseEntity.status(response.code()).body(response.data());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/")
     @ResponseStatus(code = org.springframework.http.HttpStatus.ACCEPTED)
-    public Vet update(@PathVariable Long id, @RequestBody VetDto vetDto) {
-        return vetService.update(id, vetDto);
+    public ResponseEntity<Vet> update(@RequestBody VetDto vetDto) {
+        Response<Vet> response = vetService.update(vetDto);
+        return ResponseEntity.status(response.code()).body(response.data());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
-        vetService.deleteById(id);
+    public ResponseEntity<Vet> deleteById(@PathVariable Long id) {
+        Response<Vet> response = vetService.deleteById(id);
+        return ResponseEntity.status(response.code()).body(response.data());
     }
 }

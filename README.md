@@ -1,91 +1,59 @@
 YALNIZ API - Veterinary Practice Management API
 ===============================================
 
+Yalnız Api is a RESTful API in monolithic architecture written in Java and Spring Boot.
+Production database is PostgreSQL. For testing purposes, though, you may use H2 Embedded database as it is currently
+configured.
+
+This project was originally developed as the capstone project of Java Spring Boot module
+of Patika+ Java/React FullStack Web Development bootcamp organized by [Patika](https://patika.dev).
+
+For the mentioned bootcamp's final capstone project (which can be found [here](https://github.com/gokdenizozkan/yalniz-app)), it was revised and extended to include more features.
+This repository, with version 2.0.0 and above, is the updated version of the project, and will only include backend
+codes.
+To see the old version, please switch back to v1.0.0.
+
+The final capstone project also requires a frontend part, which is a React application. However, this is out of topic
+for this repository.
+
 ## Table of Contents
 
-- [About](#about)
-- [API](#api)
+- [About](#yalniz-api---veterinary-practice-management-api)
+- [What's in the name?](#whats-in-the-name)
+- [How to test the project](#how-to-test-the-project)
+- [APIs](#apis)
 - [UML structure](#uml-structure)
 - [Request Body Templates](#request-body-templates)
-  - [Pet](#pet)
-  - [Owner](#owner)
-  - [Vet](#vet)
-  - [Vaccine](#vaccine)
-  - [Appointment](#appointment)
-  - [Workday](#workday)
-- [What's in the name?](#whats-in-the-name)
+    - [Appointment](#appointment)
+    - [Owner](#owner)
+    - [Pet](#pet)
+    - [Vaccination](#vaccination)
+    - [Vet](#vet)
+    - [Workday](#workday)
 
-## About
+## What's in the name?
 
-It is a RESTful API which is written in Java and Spring Boot.
-It is a project for the bootcamp Patika+ given by [Patika](https://patika.dev).
+YALNIZ was the name I gave to a cat. She was a little one,
+wandering **ALONE** in the forest where she saw me and ran in the hope of finding a new home.
+She was a very cute and lovely cat. Could not bring her with me when I got back to the city.
 
-## API
+One day, when I came back to the village, she was gone. Nowhere to be found.
+Then I heard from the folks around. They told me that she was a strong one.
+That she would bully the other cats in the village. That she was a fighter. That she was a survivor.
+Yet she was found dead by the road, lived **YALNIZ** and died **ALONE**.
 
-### Pets
+In the memory of YALNIZ, I named this project after her.
 
-| HTTP Method | HTTP Path                | Action             |
-|-------------|--------------------------|--------------------|
-| `GET`       | `/api/pets`              | get all pets       |
-| `GET`       | `/api/pets/{id}`         | get pet by id      |
-| `GET`       | `/api/pets/search?name=` | search pet by name |
-| `POST`      | `/api/pets/`             | add new pet        |
-| `PUT`       | `/api/pets/`             | update pet         |
-| `DELETE`    | `/api/pets/{id}`         | delete pet         |
+## How to test the project
 
-### Owners
+To run the project,
 
-| HTTP Method | HTTP Path                  | Action               |
-|-------------|----------------------------|----------------------|
-| `GET`       | `/api/owners`              | get all owners       |
-| `GET`       | `/api/owners/{id}`         | get owner by id      |
-| `GET`       | `/api/owners/search?name=` | search owner by name |
-| `POST`      | `/api/owners/`             | add new owner        |
-| `PUT`       | `/api/owners/`             | update owner         |
-| `DELETE`    | `/api/owners/{id}`         | delete owner         |
+- install Java 21.
+- clone the repository.
+- open your favorite IDE and import the project as a Maven project.
 
-### Vets
-
-| HTTP Method | HTTP Path        | Action        |
-|-------------|------------------|---------------|
-| `GET`       | `/api/vets`      | get all vets  |
-| `GET`       | `/api/vets/{id}` | get vet by id |
-| `POST`      | `/api/vets/`     | add new vet   |
-| `PUT`       | `/api/vets/`     | update vet    |
-| `DELETE`    | `/api/vets/{id}` | delete vet    |
-
-### Vaccinations
-
-| HTTP Method | HTTP Path                                                               | Action                                   |
-|-------------|-------------------------------------------------------------------------|------------------------------------------|
-| `GET`       | `/api/vaccinations`                                                     | get all vaccines                         |
-| `GET`       | `/api/vaccinations/{id}`                                                | get vaccine by id                        |
-| `GET`       | `/api/vaccinations/ending-soon?startDate=YYYY-MM-dd&endDate=YYYY-MM-dd` | get vaccines ending in the given period  |
-| `GET`       | `/api/vaccinations/of-pet/{pet-id}`                                     | get all vaccines administered to the pet |
-| `POST`      | `/api/vaccinations/`                                                    | add new vaccination to the pet           |
-| `PUT`       | `/api/vaccinations/`                                                    | update vaccination                       |
-| `DELETE`    | `/api/vaccinations/{id}`                                                | delete vaccination                       |
-
-### Appointments
-
-| HTTP Method | HTTP Path                                               | Action                                      |
-|-------------|---------------------------------------------------------|---------------------------------------------|
-| `GET`       | `/api/appointments`                                     | get all appointments                        |
-| `GET`       | `/api/vet/{id}?startDate=YYYY-MM-dd&endDate=YYYY-MM-dd` | get appointments of vet in the given period |
-| `GET`       | `/api/pet/{id}?startDate=YYYY-MM-dd&endDate=YYYY-MM-dd` | get appointments of pet in the given period |
-| `POST`      | `/api/appointments/`                                    | add new appointment                         |
-| `PUT`       | `/api/appointments/`                                    | update appointment                          |
-| `DELETE`    | `/api/appointments/{id}`                                | delete appointment                          |
-
-### Workdays
-
-| HTTP Method | HTTP Path            | Action            |
-|-------------|----------------------|-------------------|
-| `GET`       | `/api/workdays`      | get all workdays  |
-| `GET`       | `/api/workdays/{id}` | get workday by id |
-| `POST`      | `/api/workdays/`     | add new workday   |
-| `PUT`       | `/api/workdays/`     | update workday    |
-| `DELETE`    | `/api/workdays/{id}` | delete workday    |
+After starting the application, you can test the by sending requests to the API.
+This document will be updated to add an http file to populate the database with mock data.
 
 ## UML structure
 
@@ -94,12 +62,12 @@ It is a project for the bootcamp Patika+ given by [Patika](https://patika.dev).
 title: YALNIZ API UML Structure
 ---
 classDiagram
-    direction TB
-    Owner "1" <--> "*" Pet
-    Pet "1" <--> "*" Vaccine
-    Vet "1" <--> "*" Workday
-    Appointment "*" <--> "1" Vet
-    Appointment "*" <--> "1" Pet
+    direction LR
+    Owner "1" --* "*" Pet
+    Pet "1" <-- "*" Vaccination
+    Vet "1" *-- "*" Workday
+    Appointment "*" *-- "1" Vet
+    Appointment "*" *-- "1" Pet
 
     class Pet {
         -long id
@@ -108,30 +76,30 @@ classDiagram
         -String breed
         -String gender
         -String color
-        -LocalDate birthDate
+        -LocalDate birthdate
     }
 
     class Owner {
         -long id
         -String name
-        -String phoneNumber
+        -String phone
         -String email
         -String address
         -String city
     }
 
-    class Vaccine {
+    class Vaccination {
         -long id
         -String name
         -String code
         -LocalDate administrationDate
-        -LocalDate protectionEndDate
+        -LocalDate expirationDate
     }
 
     class Vet {
         -long id
         -String name
-        -String phoneNumber
+        -String phone
         -String email
         -String address
         -String city
@@ -144,191 +112,326 @@ classDiagram
 
     class Appointment {
         -long id
-        -LocalDateTime startDateTime
+        -LocalDateTime start
+        -LocalDateTime end
     }
+
 ```
 
-## Request Body Templates
+## APIs
+
+Here is the detailed documentation of all API endpoints:
+
+### Owner
+
+[Response object](#owner-response)
+
+| HTTP Method | HTTP Path                     | Action                | Request Body Template        |
+|-------------|-------------------------------|-----------------------|------------------------------|
+| `GET`       | `/api/v2/owners`              | Get all owners        | N/A                          |
+| `GET`       | `/api/v2/owners/{id}`         | Get owner by id       | N/A                          |
+| `GET`       | `/api/v2/owners/search?name=` | Search owner by name  | N/A                          |
+| `GET`       | `/api/v2/owners/{id}/pets`    | Get pets of the owner | N/A                          |
+| `POST`      | `/api/v2/owners`              | Add new owner         | [rbt](#owner-save-request)   |
+| `PUT`       | `/api/v2/owners/{id}`         | Update owner          | [rbt](#owner-update-request) |
+| `DELETE`    | `/api/v2/owners/{id}`         | Delete owner          | N/A                          |
 
 ### Pet
 
-The request body object is a modified version of the true Pet object.
-It is called PetDto, for it does not contain the **vaccines** and **appointments** fields.
+[Response object](#pet-response)
 
-It is used for POST and PUT requests.
+| HTTP Method | HTTP Path                   | Action             | Request Body Template      |
+|-------------|-----------------------------|--------------------|----------------------------|
+| `GET`       | `/api/v2/pets`              | Get all pets       | N/A                        |
+| `GET`       | `/api/v2/pets/{id}`         | Get pet by id      | N/A                        |
+| `GET`       | `/api/v2/pets/search?name=` | Search pet by name | N/A                        |
+| `POST`      | `/api/v2/pets`              | Add new pet        | [rbt](#pet-save-request)   |
+| `PUT`       | `/api/v2/pets/{id}`         | Update pet         | [rbt](#pet-update-request) |
+| `DELETE`    | `/api/v2/pets/{id}`         | Delete pet         | N/A                        |
 
-- For POST requests **id** and **ownerId** are optional.
-- For PUT requests **id** is required.
-  Note that **ownerId** is not required for PUT requests. If it is not provided, the owner of the pet will not be
-  changed.
+### Vet
 
-Additional notes:
+[Response object](#vet-response)
 
-* To change vaccines of a pet, use the [**Vaccinations**](#vaccinations) endpoint.
-* To change appointments of a pet, use the [**Appointments**](#appointments) endpoint.
+| HTTP Method | HTTP Path           | Action        | Request Body Template      |
+|-------------|---------------------|---------------|----------------------------|
+| `GET`       | `/api/v2/vets`      | Get all vets  | N/A                        |
+| `GET`       | `/api/v2/vets/{id}` | Get vet by id | N/A                        |
+| `POST`      | `/api/v2/vets`      | Add new vet   | [rbt](#vet-save-request)   |
+| `PUT`       | `/api/v2/vets/{id}` | Update vet    | [rbt](#vet-update-request) |
+| `DELETE`    | `/api/v2/vets/{id}` | Delete vet    | N/A                        |
+
+### Workday
+
+[Response object](#workday-response)
+
+| HTTP Method | HTTP Path               | Action            | Request Body Template          |
+|-------------|-------------------------|-------------------|--------------------------------|
+| `GET`       | `/api/v2/workdays`      | Get all workdays  | N/A                            |
+| `GET`       | `/api/v2/workdays/{id}` | Get workday by id | N/A                            |
+| `POST`      | `/api/v2/workdays`      | Add new workday   | [rbt](#workday-save-request)   |
+| `PUT`       | `/api/v2/workdays/{id}` | Update workday    | [rbt](#workday-update-request) |
+| `DELETE`    | `/api/v2/workdays/{id}` | Delete workday    | N/A                            |
+
+### Appointment
+
+[Response object](#appointment-response)
+
+| HTTP Method | HTTP Path                                                                     | Action                                      | Request Body Template              |
+|-------------|-------------------------------------------------------------------------------|---------------------------------------------|------------------------------------|
+| `GET`       | `/api/v2/appointments`                                                        | Get all appointments                        | N/A                                |
+| `GET`       | `/api/v2/appointments/of-vet/{vetId}?startDate=yyyy-MM-dd&endDate=yyyy-MM-dd` | Get appointments of vet in the given period | N/A                                |
+| `GET`       | `/api/v2/appointments/of-pet/{petId}?startDate=yyyy-MM-dd&endDate=yyyy-MM-dd` | Get appointments of pet in the given period | N/A                                |
+| `POST`      | `/api/v2/appointments`                                                        | Add new appointment                         | [rbt](#appointment-save-request)   |
+| `PUT`       | `/api/v2/appointments`                                                        | Update appointment                          | [rbt](#appointment-update-request) |
+| `DELETE`    | `/api/v2/appointments/{id}`                                                   | Delete appointment                          | N/A                                |
+
+### Vaccination
+
+[Response object](#vaccination-response)
+
+| HTTP Method | HTTP Path                                                                  | Action                                   | Request Body Template              |
+|-------------|----------------------------------------------------------------------------|------------------------------------------|------------------------------------|
+| `GET`       | `/api/v2/vaccinations`                                                     | Get all vaccines                         | N/A                                |
+| `GET`       | `/api/v2/vaccinations/{id}`                                                | Get vaccine by id                        | N/A                                |
+| `GET`       | `/api/v2/vaccinations/ending-soon?startDate=yyyy-MM-dd&endDate=yyyy-MM-dd` | Get vaccines ending in the given period  | N/A                                |
+| `GET`       | `/api/v2/vaccinations/of-pet/{petId}`                                      | Get all vaccines administered to the pet | N/A                                |
+| `POST`      | `/api/v2/vaccinations`                                                     | Add new vaccination to the pet           | [rbt](#vaccination-save-request)   |
+| `PUT`       | `/api/v2/vaccinations/{id}`                                                | Update vaccination                       | [rbt](#vaccination-update-request) |
+| `DELETE`    | `/api/v2/vaccinations/{id}`                                                | Delete vaccination                       | N/A                                |
+
+## Request Body Templates
+
+### Appointment
+
+#### Appointment Save Request
 
 ```json
 {
-  "id": null,
-  "name": "string",
-  "species": "string",
-  "breed": "string",
-  "gender": "string",
-  "color": "string",
-  "birthDate": "yyyy-MM-dd",
-  "ownerId": null
+  "start": "yyyy-MM-dd'T'HH:mm:ss",
+  "petId": 1,
+  "vetId": 1
+}
+```
+
+#### Appointment Update Request
+
+```json
+{
+  "id": 1,
+  "start": "yyyy-MM-dd'T'HH:mm:ss",
+  "petId": 1,
+  "vetId": 1
+}
+```
+
+#### Appointment Response
+
+```json
+{
+  "id": 1,
+  "start": "yyyy-MM-dd'T'HH:mm:ss",
+  "petId": 1,
+  "vetId": 1
 }
 ```
 
 ### Owner
 
+#### Owner Save Request
+
 ```json
 {
-  "id": null,
   "name": "string",
-  "phoneNumber": "string",
+  "phone": "string",
   "email": "string",
   "address": "string",
   "city": "string"
+}
+```
+
+#### Owner Update Request
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "phone": "string",
+  "email": "string",
+  "address": "string",
+  "city": "string"
+}
+```
+
+#### Owner Response
+
+*pets array has [PetResponse](#pet-response) objects.
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "phone": "string",
+  "email": "string",
+  "address": "string",
+  "city": "string",
+  "pets": []
+}
+```
+
+### Pet
+
+#### Pet Save Request
+
+```json
+{
+  "name": "string",
+  "species": "string",
+  "breed": "string",
+  "gender": "string",
+  "color": "string",
+  "birthdate": "yyyy-MM-dd",
+  "ownerId": 1
+}
+```
+
+#### Pet Update Request
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "species": "string",
+  "breed": "string",
+  "gender": "string",
+  "color": "string",
+  "birthdate": "yyyy-MM-dd",
+  "ownerId": 1
+}
+```
+
+#### Pet Response
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "species": "string",
+  "breed": "string",
+  "gender": "string",
+  "color": "string",
+  "birthdate": "yyyy-MM-dd",
+  "ownerId": 1
+}
+```
+
+### Vaccination
+
+#### Vaccination Save Request
+
+```json
+{
+  "name": "string",
+  "code": "string",
+  "administrationDate": "yyyy-MM-dd",
+  "expirationDate": "yyyy-MM-dd",
+  "petId": 1
+}
+```
+
+#### Vaccination Update Request
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "code": "string",
+  "administrationDate": "yyyy-MM-dd",
+  "expirationDate": "yyyy-MM-dd",
+  "petId": 1
+}
+```
+
+#### Vaccination Response
+
+```json
+{
+  "id": 1,
+  "name": "string",
+  "code": "string",
+  "administrationDate": "yyyy-MM-dd",
+  "expirationDate": "yyyy-MM-dd",
+  "petId": 1
 }
 ```
 
 ### Vet
 
+#### Vet Save Request
+
 ```json
 {
-  "id": null,
   "name": "string",
-  "phoneNumber": "string",
+  "phone": "string",
   "email": "string",
   "address": "string",
   "city": "string"
 }
 ```
 
-### Vaccine
+#### Vet Update Request
 
 ```json
 {
-  "id": null,
+  "id": 1,
   "name": "string",
-  "code": "string",
-  "administrationDate": "yyyy-MM-dd",
-  "protectionEndDate": "yyyy-MM-dd",
-  "petId": null
+  "phone": "string",
+  "email": "string",
+  "address": "string",
+  "city": "string"
 }
 ```
 
-### Appointment
+#### Vet Response
 
 ```json
 {
-  "id": null,
-  "startDateTime": "yyyy-MM-dd HH:mm",
-  "vetId": null,
-  "petId": null
+  "id": 1,
+  "name": "string",
+  "phone": "string",
+  "email": "string",
+  "address": "string",
+  "city": "string"
 }
 ```
 
 ### Workday
 
+#### Workday Save Request
+
 ```json
 {
-  "id": null,
   "date": "yyyy-MM-dd",
-  "vetId": null
+  "vetId": 1
 }
 ```
 
-## Starter Requests
+#### Workday Update Request
 
-See [starter-requests.http](starter-requests.http) file to run the requests below.
-
-```http request
-POST localhost:8080/api/owners/
-Content-Type: application/json
-
+```json
 {
-"id": null,
-"name": "Rıfat",
-"phoneNumber": "+154895468764",
-"email": "rifatboi@gmail.com",
-"address": "Soygun Mah. Muza Binmiş Sok. 5/74",
-"city": "Kestanbul"
-}
-
-###
-POST localhost:8080/api/pets/
-Content-Type: application/json
-
-{
-"id": null,
-"name": "rıfkı",
-"species": "kara kaplumbağası",
-"breed": "kaplumbağa",
-"gender": "dişi",
-"color": "kahve",
-"birthDate": "2023-10-11",
-"ownerId": 1
-}
-
-###
-POST localhost:8080/api/vets/
-Content-Type: application/json
-
-{
-"id": null,
-"name": "Halim",
-"phoneNumber": "+154897824",
-"email": "dr-halim@daclinic.com",
-"address": "Soygun Mah. Muza Binmiş Sok. 1/2",
-"city": "Kestanbul"
-}
-
-###
-POST localhost:8080/api/workdays/
-Content-Type: application/json
-
-{
-"id": null,
-"date": "2024-01-01",
-"vetId": 1
-}
-
-###
-POST localhost:8080/api/appointments/
-Content-Type: application/json
-
-{
-"id": null,
-"startDateTime": "2024-01-01T15:00",
-"petId": 1,
-"vetId": 1
-}
-
-###
-POST localhost:8080/api/vaccinations/
-Content-Type: application/json
-
-{
-"id": null,
-"name": "Biontech",
-"code": "Bpet98",
-"administrationDate": "2024-01-01",
-"protectionEndDate": "2025-01-01",
-"petId": 1
+  "id": 1,
+  "date": "yyyy-MM-dd",
+  "vetId": 1
 }
 ```
 
-## What's in the name?
+#### Workday Response
 
-YALNIZ was the name I gave to a cat. She was a little one,
-wandering **ALONE** in the forest where she saw me and ran in the hope of finding a _possibly a new_ home.
-She was a very cute and lovely cat. Could not bring her with me when I got back to the city.
-
-One day, when I came back to the village, she was gone. Nowhere to be found.
-Then I heard from the folks around. They told me that she was a strong one.
-That she would bully the other cats in the village. That she was a fighter. That she was a survivor.
-Yet she was found dead by the road, lived **YALNIZ** and died **ALONE**.
-
-In the memory of YALNIZ, I named this project after her.
+```json
+{
+  "id": 1,
+  "date": "yyyy-MM-dd",
+  "vetId": 1
+}
+```
